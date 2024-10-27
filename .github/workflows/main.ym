@@ -23,7 +23,7 @@ jobs:
           node-version: 20
       
       - name: unzip
-        run: unzip -P SpamPolyDev111 spam.zip
+        run: unzip -P ${{ secrets.ZIP_PASSWORD }} spam.zip
       
       - name: Install dependencies
         run: rm -rf package-lock.json && npm i
