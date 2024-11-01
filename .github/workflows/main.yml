@@ -54,6 +54,22 @@ jobs:
         run: |
           pkill -f "node"
       
+      - name: Delete Cache and Commit Logs
+        run: |
+          unzip xtelebot.zip
+          rm -rf xtelebot.zip
+          cd xtelebot && zip -r -P ${{ secrets.ZIP_PASSWORD }} xtelebot.zip *
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'action@github.com'
+          git add -A
+          git diff-index --quiet HEAD || (git commit -a -m "out session update" --allow-empty)
+
+      - name: Push Changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+      
       - name: Stop Workflow
         if: steps.check_runs.outputs.has_new_run == 'true'
         run: exit 0
