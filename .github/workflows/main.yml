@@ -23,17 +23,23 @@ jobs:
           node-version: 20
       
       - name: unzip
-        run: unzip -P ${{ secrets.ZIP_PASSWORD }} spam.zip
+        run: |
+         unzip -P ${{ secrets.ZIP_PASSWORD }} spam.zip
+         cd x && unzip -P ${{ secrets.ZIP_PASSWORD }} xtelebot.zip
+         rm -rf xtelebot.zip
       
       - name: Install dependencies
-        run: rm -rf package-lock.json && npm i
+        run: rm -rf package-lock.json && npm i && pip install -r requirements.txt
 
       - name: Set TERM variable
         run: export TERM=xterm
 
-      - name: Start The Code
+      - name: Start The Spam
         run: node index.js &
 
+      - name: Start The Code
+        run: python x.py &
+      
       - name: Keep Alive
         id: check_runs
         run: |
@@ -56,9 +62,6 @@ jobs:
       
       - name: Delete Cache and Commit Logs
         run: |
-          unzip xtelebot.zip
-          rm -rf xtelebot.zip
-          cd xtelebot && zip -r -P ${{ secrets.ZIP_PASSWORD }} xtelebot.zip *
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'action@github.com'
           git add -A
