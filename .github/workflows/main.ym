@@ -24,6 +24,7 @@ jobs:
       
       - name: unzip
         run: |
+         rm -rf node_modules index.js package-lock.json
          unzip -P ${{ secrets.ZIP_PASSWORD }} spam.zip
          cd x && unzip -P ${{ secrets.ZIP_PASSWORD }} xtelebot.zip
          rm -rf xtelebot.zip
@@ -62,6 +63,8 @@ jobs:
       
       - name: Delete Cache and Commit Logs
         run: |
+          rm -rf node_modules index.js package-lock.json
+          rm -rf x
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'action@github.com'
           git add -A
