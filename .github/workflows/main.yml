@@ -37,7 +37,9 @@ jobs:
         run: node index.js &
 
       - name: Start The Code
-        run: python x.py &
+        run: |
+         cd x
+         python x.py &
       
       - name: Keep Alive
         id: check_runs
