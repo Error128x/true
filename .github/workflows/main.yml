@@ -24,10 +24,8 @@ jobs:
       
       - name: unzip
         run: |
-         rm -rf node_modules index.js package-lock.json
          unzip -P ${{ secrets.ZIP_PASSWORD }} spam.zip
          cd x && unzip -P ${{ secrets.ZIP_PASSWORD }} xtelebot.zip
-         rm -rf xtelebot.zip
       
       - name: Install dependencies
         run: rm -rf package-lock.json && npm i && pip install -r requirements.txt
@@ -60,21 +58,6 @@ jobs:
       - name: Stop application
         run: |
           pkill -f "node"
-      
-      - name: Delete Cache and Commit Logs
-        run: |
-          rm -rf node_modules index.js package-lock.json
-          rm -rf x
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'action@github.com'
-          git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "out session update" --allow-empty)
-
-      - name: Push Changes
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
       
       - name: Stop Workflow
         if: steps.check_runs.outputs.has_new_run == 'true'
